@@ -39,8 +39,7 @@ public class MoviesServiceImpl implements MoviesService{
     @Override
     public Movie findById(Integer id) {
         return moviesRepository.findById(id).orElseThrow(
-                () -> new MovieNotFoundException("Movie with id " + id + " not found")
-        );
+                () -> new MovieNotFoundException("Movie with id " + id + " not found"));
     }
 
     @Override
