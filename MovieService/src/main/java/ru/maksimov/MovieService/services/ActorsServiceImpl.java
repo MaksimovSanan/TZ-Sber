@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.maksimov.MovieService.models.Actor;
+import ru.maksimov.MovieService.models.Movie;
 import ru.maksimov.MovieService.models.Producer;
 import ru.maksimov.MovieService.repositories.ActorsRepository;
 import ru.maksimov.MovieService.util.PatchHelper;
@@ -60,6 +61,11 @@ public class ActorsServiceImpl implements ActorsService{
     @Override
     @Transactional
     public void delete(Actor actor) {
+        for (Movie movie : actor.getMovies()) {
+            movie.getActors().remove(actor);
+        }
+        actor.getMovies().clear();
+
         actorsRepository.delete(actor);
     }
 }
