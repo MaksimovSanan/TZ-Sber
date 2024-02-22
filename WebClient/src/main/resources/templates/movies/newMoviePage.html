@@ -1,0 +1,51 @@
+<!-- movies/newMoviePage.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Movie</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container">
+    <h1>Create New Movie</h1>
+    <form th:action="@{/movies/create}" method="post">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="yearOfProduction" class="form-label">Year of Production</label>
+            <input type="number" class="form-control" id="yearOfProduction" name="yearOfProduction">
+        </div>
+        <!-- Выпадающий список для выбора продюсера -->
+        <div class="mb-3">
+            <label for="producerId" class="form-label">Producer</label>
+            <select class="form-select" id="producerId" name="producerId">
+                <option value="">Select Producer</option>
+                <option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}"></option>
+            </select>
+        </div>
+        <!-- Чекбоксы для выбора актеров -->
+        <div class="mb-3">
+            <label class="form-label">Actors</label>
+            <div th:each="actor : ${actors}">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" th:id="'actor' + ${actor.id}" th:name="'actorsId'" th:value="${actor.id}">
+                    <label class="form-check-label" th:for="'actor' + ${actor.id}" th:text="${actor.name}"></label>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
