@@ -1,0 +1,63 @@
+
+version: '3.1'
+services:
+  eureka-server:
+    build:
+      context: .
+      dockerfile: docker/services/Dockerfile.EurekaServer
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - my_network
+
+  movie_service_postgresql:
+    build:
+      context: docker/databases/MoviesServicePostgreSQL
+      dockerfile: Dockerfile.MoviesServicePostgreSQL
+    container_name: movies_service_postgresql_container
+    ports:
+      - "5433:5432"
+    networks:
+      - my_network
+
+  movies_service:
+      build:
+        context: .
+        dockerfile: docker/services/Dockerfile.MoviesService
+      container_name: movies_service_container
+#      ports:
+#        - "8096:8096"
+      links:
+        - eureka-server
+      networks:
+        - my_network
+
+
+  web_client:
+    build:
+      context: .
+      dockerfile: docker/services/Dockerfile.WebClient
+    container_name: web_client
+    ports:
+      - "8081:8081"
+    links:
+      - eureka-server
+    networks:
+      - my_network
+
+#  api_gateway:
+#    build:
+#      context: APIGateway
+#      dockerfile: Dockerfile.APIGateway
+#    container_name: api_gateway
+#    ports:
+#      - "8080:8080"
+#    links:
+#      - eureka-server
+#    networks:
+#      - my_network
+#
+
+networks:
+  my_network:
