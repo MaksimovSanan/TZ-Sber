@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO для создания нового фильма.
+ */
 @Data
 @NoArgsConstructor
 public class NewMovieDto {

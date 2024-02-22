@@ -33,7 +33,7 @@ public class ActorsController {
     @GetMapping
     public String getActorsPage(Model model) {
         List<ActorSimpleDto> actors = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/actors",
+                "http://MOVIESSERVICE/api/actors",
                 ActorSimpleDto[].class
         )).toList();
 
@@ -45,7 +45,7 @@ public class ActorsController {
     @GetMapping("/{id}")
     public String getActorInfo(@PathVariable("id") int id, Model model) {
         ActorDto actor = restTemplate.getForObject(
-                "http://MOVIESSERVICE/actors/" + id,
+                "http://MOVIESSERVICE/api/actors/" + id,
                 ActorDto.class);
 
         model.addAttribute("actor", actor);
@@ -56,7 +56,7 @@ public class ActorsController {
     @GetMapping("/{id}/edit")
     public String editPage(@PathVariable("id") int id, Model model) {
         ActorDto actor = restTemplate.getForObject(
-                "http://MOVIESSERVICE/actors/" + id,
+                "http://MOVIESSERVICE/api/actors/" + id,
                 ActorDto.class);
         model.addAttribute("actor", actor);
         return "actors/editPage";
@@ -70,13 +70,13 @@ public class ActorsController {
 
         HttpEntity<NewActorDto> requestEntity = new HttpEntity<>(actorDto, headers);
 
-        restTemplate.patchForObject("http://MOVIESSERVICE/actors/" + id, requestEntity, Void.class);
+        restTemplate.patchForObject("http://MOVIESSERVICE/api/actors/" + id, requestEntity, Void.class);
         return "redirect:/actors/" + id;
     }
 
     @DeleteMapping("/{id}")
     public String deleteProducer(@PathVariable("id") int id) {
-        restTemplate.delete("http://MOVIESSERVICE/actors/" + id);
+        restTemplate.delete("http://MOVIESSERVICE/api/actors/" + id);
         return "redirect:/";
     }
 
@@ -88,12 +88,12 @@ public class ActorsController {
     @PostMapping("/create")
     public String create(@ModelAttribute NewActorDto newActor) {
 
-        String createMovieUrl = "http://MOVIESSERVICE/actors";
+        String createActorUrl = "http://MOVIESSERVICE/api/actors";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<NewActorDto> requestEntity = new HttpEntity<>(newActor, headers);
-        ResponseEntity<Void> responseEntity = restTemplate.postForEntity(createMovieUrl, requestEntity, Void.class);
+        ResponseEntity<Void> responseEntity = restTemplate.postForEntity(createActorUrl, requestEntity, Void.class);
 
         return "redirect:/";
     }

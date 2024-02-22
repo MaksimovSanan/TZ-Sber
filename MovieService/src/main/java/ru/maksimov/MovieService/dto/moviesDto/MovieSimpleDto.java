@@ -7,6 +7,9 @@ import ru.maksimov.MovieService.models.Actor;
 
 import java.util.List;
 
+/**
+ * Простой DTO для представления информации о фильме без списка актеров и продюсера.
+ */
 @Data
 @NoArgsConstructor
 public class MovieSimpleDto {

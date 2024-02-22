@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO для создания нового продюсера.
+ */
 @Data
 @NoArgsConstructor
 public class NewProducerDto {

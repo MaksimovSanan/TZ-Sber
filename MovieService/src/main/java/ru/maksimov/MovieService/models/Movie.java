@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Класс, представляющий модель фильма.
+ */
 @Entity
 @Table(name = "movies")
 @Data
@@ -37,9 +40,13 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
-//    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Actor> actors;
 
+    /**
+     * Метод для установки продюсера фильма по его идентификатору.
+     *
+     * @param producerId Идентификатор продюсера фильма.
+     */
     public void producerById(Integer producerId) {
         if(producerId == null) {
             producer = null;
@@ -48,6 +55,11 @@ public class Movie {
         }
     }
 
+    /**
+     * Метод для установки актеров фильма по их идентификаторам.
+     *
+     * @param actorsId Список идентификаторов актеров фильма.
+     */
     public void actorsById(List<Integer> actorsId) {
         if(actorsId == null) {
             actors = null;

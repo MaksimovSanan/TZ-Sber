@@ -33,7 +33,7 @@ public class MoviesController {
     @GetMapping
     public String getMoviesPage(Model model) {
         List<MovieSimpleDto> movies = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/movies",
+                "http://MOVIESSERVICE/api/movies",
                 MovieSimpleDto[].class
         )).toList();
 
@@ -45,7 +45,7 @@ public class MoviesController {
     @GetMapping("/{id}")
     public String getMovieInfo(@PathVariable("id") int id, Model model) {
         MovieDto movie = restTemplate.getForObject(
-                "http://MOVIESSERVICE/movies/" + id,
+                "http://MOVIESSERVICE/api/movies/" + id,
                 MovieDto.class);
 
         model.addAttribute("movie", movie);
@@ -57,13 +57,13 @@ public class MoviesController {
     public String newMoviePage(@ModelAttribute("newMovie") NewMovieDto newMovieDto, Model model) {
 
         List<ProducerSimpleDto> producers = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/producers",
+                "http://MOVIESSERVICE/api/producers",
                 ProducerSimpleDto[].class
         )).toList();
         model.addAttribute("producers", producers);
 
         List<ActorSimpleDto> actors = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/actors",
+                "http://MOVIESSERVICE/api/actors",
                 ActorSimpleDto[].class
         )).toList();
         model.addAttribute("actors", actors);
@@ -74,7 +74,7 @@ public class MoviesController {
     @PostMapping("/create")
     public String create(@ModelAttribute NewMovieDto newMovie) {
 
-        String createMovieUrl = "http://MOVIESSERVICE/movies";
+        String createMovieUrl = "http://MOVIESSERVICE/api/movies";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -87,18 +87,18 @@ public class MoviesController {
     @GetMapping("/{id}/edit")
     public String editPage(@PathVariable("id") int id, Model model) {
         MovieDto movie = restTemplate.getForObject(
-                "http://MOVIESSERVICE/movies/" + id,
+                "http://MOVIESSERVICE/api/movies/" + id,
                 MovieDto.class);
         model.addAttribute("movie", movie);
 
         List<ProducerSimpleDto> producers = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/producers",
+                "http://MOVIESSERVICE/api/producers",
                 ProducerSimpleDto[].class
         )).toList();
         model.addAttribute("producers", producers);
 
         List<ActorSimpleDto> actors = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/actors",
+                "http://MOVIESSERVICE/api/actors",
                 ActorSimpleDto[].class
         )).toList();
         model.addAttribute("actors", actors);
@@ -114,13 +114,13 @@ public class MoviesController {
 
         HttpEntity<NewMovieDto> requestEntity = new HttpEntity<>(movieDto, headers);
 
-        restTemplate.patchForObject("http://MOVIESSERVICE/movies/" + id, requestEntity, Void.class);
+        restTemplate.patchForObject("http://MOVIESSERVICE/api/movies/" + id, requestEntity, Void.class);
         return "redirect:/movies/" + id;
     }
 
     @DeleteMapping("/{id}")
     public String deleteProducer(@PathVariable("id") int id) {
-        restTemplate.delete("http://MOVIESSERVICE/movies/" + id);
+        restTemplate.delete("http://MOVIESSERVICE/api/movies/" + id);
         return "redirect:/";
     }
 }

@@ -16,6 +16,9 @@ import ru.maksimov.MovieService.util.exceptions.ProducerNotFoundException;
 
 import java.util.List;
 
+/**
+ * Реализация сервиса для работы с актерами.
+ */
 @Service
 @Transactional(readOnly = true)
 public class ActorsServiceImpl implements ActorsService{
@@ -23,28 +26,58 @@ public class ActorsServiceImpl implements ActorsService{
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Конструктор для создания объекта ActorsServiceImpl с указанным репозиторием актеров.
+     *
+     * @param actorsRepository Репозиторий актеров.
+     */
     @Autowired
     public ActorsServiceImpl(ActorsRepository actorsRepository) {
         this.actorsRepository = actorsRepository;
     }
 
+    /**
+     * Получить список всех актеров.
+     *
+     * @return Список всех актеров.
+     */
     @Override
     public List<Actor> findAll() {
         return actorsRepository.findAll();
     }
 
+    /**
+     * Найти актера по его идентификатору.
+     *
+     * @param id Идентификатор актера.
+     * @return Найденный актер.
+     * @throws ActorNotFoundException если актер с указанным идентификатором не найден.
+     */
     @Override
     public Actor findById(Integer id) {
         return actorsRepository.findById(id).orElseThrow(
                 () -> new ActorNotFoundException("Actor with id " + id + " not found!"));
     }
 
+    /**
+     * Сохранить нового актера.
+     *
+     * @param actor Новый актер для сохранения.
+     */
     @Override
     @Transactional
     public void save(Actor actor) {
         actorsRepository.save(actor);
     }
 
+    /**
+     * Обновить информацию об актере.
+     *
+     * @param id            Идентификатор актера для обновления.
+     * @param actorUpdated  Новая информация об актере.
+     * @return Обновленный актер.
+     * @throws ActorNotFoundException если актер с указанным идентификатором не найден.
+     */
     @Override
     @Transactional
     public Actor update(int id, Actor actorUpdated) {
@@ -58,6 +91,11 @@ public class ActorsServiceImpl implements ActorsService{
         return entityManager.merge(existingActor);
     }
 
+    /**
+     * Удалить актера.
+     *
+     * @param actor Актер для удаления.
+     */
     @Override
     @Transactional
     public void delete(Actor actor) {

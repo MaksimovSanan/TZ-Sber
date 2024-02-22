@@ -18,6 +18,9 @@ import ru.maksimov.MovieService.util.exceptions.ProducerNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Реализация сервиса для работы с фильмами.
+ */
 @Service
 @Transactional(readOnly = true)
 public class MoviesServiceImpl implements MoviesService{
@@ -31,17 +34,34 @@ public class MoviesServiceImpl implements MoviesService{
         this.moviesRepository = moviesRepository;
     }
 
+    /**
+     * Получить все фильмы.
+     *
+     * @return Список всех фильмов.
+     */
     @Override
     public List<Movie> findAll() {
         return moviesRepository.findAll();
     }
 
+    /**
+     * Найти фильм по идентификатору.
+     *
+     * @param id Идентификатор фильма.
+     * @return Найденный фильм.
+     * @throws MovieNotFoundException если фильм не найден.
+     */
     @Override
     public Movie findById(Integer id) {
         return moviesRepository.findById(id).orElseThrow(
                 () -> new MovieNotFoundException("Movie with id " + id + " not found"));
     }
 
+    /**
+     * Сохранить фильм.
+     *
+     * @param movie Фильм для сохранения.
+     */
     @Override
     @Transactional
     public void save(Movie movie) {
@@ -49,6 +69,16 @@ public class MoviesServiceImpl implements MoviesService{
         moviesRepository.save(movie);
     }
 
+    /**
+     * Обновить фильм.
+     *
+     * @param id           Идентификатор фильма для обновления.
+     * @param movieUpdates Новая версия фильма.
+     * @return Обновленный фильм.
+     * @throws MovieNotFoundException   если фильм не найден.
+     * @throws ProducerNotFoundException если продюсер не найден.
+     * @throws ActorNotFoundException    если актер не найден.
+     */
     @Override
     @Transactional
     public Movie update(int id, Movie movieUpdates) {
@@ -85,11 +115,14 @@ public class MoviesServiceImpl implements MoviesService{
         return entityManager.merge(existingMovie);
     }
 
+    /**
+     * Удалить фильм.
+     *
+     * @param movie Фильм для удаления.
+     */
     @Override
     @Transactional
     public void delete(Movie movie) {
         moviesRepository.delete(movie);
     }
-
-
 }

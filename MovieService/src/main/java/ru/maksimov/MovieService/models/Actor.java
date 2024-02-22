@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Класс, представляющий модель актера.
+ */
 @Entity
 @Table(name = "actors")
 @Data
@@ -20,9 +23,13 @@ public class Actor {
     private String name;
 
     @ManyToMany(mappedBy = "actors")
-//    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Movie> movies;
 
+    /**
+     * Конструктор для создания актера с указанным идентификатором.
+     *
+     * @param id Идентификатор актера.
+     */
     public Actor(Integer id) {
         this.id = id;
     }

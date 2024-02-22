@@ -20,8 +20,11 @@ import ru.maksimov.MovieService.util.BindingResultHandler;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Контроллер для обработки HTTP-запросов, связанных с актерами.
+ */
 @RestController
-@RequestMapping("/actors")
+@RequestMapping("/api/actors")
 public class ActorsController {
     private final ActorsService actorsService;
     private final ModelMapper modelMapper;
@@ -32,20 +35,35 @@ public class ActorsController {
         this.modelMapper = modelMapper;
     }
 
-
+    /**
+     * Получить список всех актеров.
+     *
+     * @return Список всех актеров.
+     */
     @GetMapping
     public ResponseEntity<List<ActorSimpleDto>> findAll() {
         List<Actor> actors = actorsService.findAll();
         return ResponseEntity.ok(actors.stream().map(this::convertToActorSimpleDto).collect(Collectors.toList()));
     }
 
+    /**
+     * Получить информацию об актере по его идентификатору.
+     *
+     * @param id Идентификатор актера.
+     * @return Информация об актере.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ActorDto> findOne(@PathVariable("id") int id) {
         return ResponseEntity.ok(convertToActorDto(actorsService.findById(id)));
     }
 
-
-
+    /**
+     * Создать нового актера.
+     *
+     * @param newActorDto Данные для нового актера.
+     * @param bindingResult Результаты валидации данных.
+     * @return Статус операции создания актера.
+     */
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid NewActorDto newActorDto,
                                          BindingResult bindingResult) {
@@ -66,6 +84,12 @@ public class ActorsController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Actor created successfully");
     }
 
+    /**
+     * Удалить актера по его идентификатору.
+     *
+     * @param id Идентификатор актера.
+     * @return Статус операции удаления актера.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         Actor actor = actorsService.findById(id);
@@ -78,6 +102,13 @@ public class ActorsController {
         return ResponseEntity.status(HttpStatus.OK).body("Actor was deleted");
     }
 
+    /**
+     * Обновить информацию об актере.
+     *
+     * @param id Идентификатор актера.
+     * @param actorToBeUpdated Новые данные об актере.
+     * @return Обновленная информация об актере.
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<ActorDto> update(@PathVariable("id") int id,
                                               @RequestBody NewActorDto actorToBeUpdated) {
@@ -89,9 +120,21 @@ public class ActorsController {
         return ResponseEntity.ok(convertToActorDto(updatedActor));
     }
 
+    /**
+     * Преобразовать объект актера в объект DTO с полной информацией.
+     *
+     * @param actor Объект актера.
+     * @return Объект DTO с полной информацией об актере.
+     */
     private ActorDto convertToActorDto(Actor actor) {
         return modelMapper.map(actor, ActorDto.class);
     }
+    /**
+     * Преобразовать объект актера в объект DTO с минимальной информацией.
+     *
+     * @param actor Объект актера.
+     * @return Объект DTO с минимальной информацией об актере.
+     */
     private ActorSimpleDto convertToActorSimpleDto(Actor actor) {
         return modelMapper.map(actor, ActorSimpleDto.class);
     }

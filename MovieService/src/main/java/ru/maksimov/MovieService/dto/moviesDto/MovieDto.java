@@ -10,6 +10,9 @@ import ru.maksimov.MovieService.models.Producer;
 
 import java.util.List;
 
+/**
+ * DTO для представления информации о фильме с дополнительным списком актеров и продюсером.
+ */
 @Data
 @NoArgsConstructor
 public class MovieDto {

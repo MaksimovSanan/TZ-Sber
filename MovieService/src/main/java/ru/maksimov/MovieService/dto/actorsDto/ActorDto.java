@@ -9,6 +9,9 @@ import ru.maksimov.MovieService.models.Movie;
 
 import java.util.List;
 
+/**
+ * DTO для представления информации об актере с дополнительным списком фильмов.
+ */
 @Data
 @NoArgsConstructor
 public class ActorDto {

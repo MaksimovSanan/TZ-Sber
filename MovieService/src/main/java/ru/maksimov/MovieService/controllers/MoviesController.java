@@ -17,29 +17,56 @@ import ru.maksimov.MovieService.util.BindingResultHandler;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Контроллер для обработки HTTP-запросов, связанных с фильмами.
+ */
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/api/movies")
 public class MoviesController {
     private final MoviesService moviesService;
     private final ModelMapper modelMapper;
 
+    /**
+     * Конструктор контроллера фильмов.
+     *
+     * @param moviesService Сервис для работы с фильмами.
+     * @param modelMapper   Инструмент для преобразования моделей и dto фильмов.
+     */
     @Autowired
     public MoviesController(MoviesService moviesService, ModelMapper modelMapper) {
         this.moviesService = moviesService;
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Получить список всех фильмов.
+     *
+     * @return Список всех фильмов.
+     */
     @GetMapping
     public ResponseEntity<List<MovieSimpleDto>> getAll() {
         List<Movie> movies = moviesService.findAll();
         return ResponseEntity.ok(movies.stream().map(this::convertToMovieSimpleDto).collect(Collectors.toList()));
     }
 
+    /**
+     * Получить информацию о фильме по его идентификатору.
+     *
+     * @param id Идентификатор фильма.
+     * @return Информация о фильме.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<MovieDto> findOne(@PathVariable("id") int id) {
         return ResponseEntity.ok(convertToMovieDto(moviesService.findById(id)));
     }
 
+    /**
+     * Создать новый фильм.
+     *
+     * @param newMovieDto   Данные для нового фильма.
+     * @param bindingResult Результаты валидации данных.
+     * @return Статус операции создания фильма.
+     */
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid NewMovieDto newMovieDto,
                                              BindingResult bindingResult) {
@@ -61,6 +88,12 @@ public class MoviesController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Movie created successfully");
     }
 
+    /**
+     * Удалить фильм по его идентификатору.
+     *
+     * @param id Идентификатор фильма для удаления.
+     * @return Статус операции удаления фильма.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         Movie movie = moviesService.findById(id);
@@ -73,6 +106,13 @@ public class MoviesController {
         return ResponseEntity.status(HttpStatus.OK).body("Movie was deleted");
     }
 
+    /**
+     * Обновить информацию о фильме.
+     *
+     * @param id                Идентификатор фильма для обновления.
+     * @param movieToBeUpdated  Обноввленные данные о фильме.
+     * @return Информация об обновленном фильме.
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<MovieDto> update(@PathVariable("id") int id,
                                              @RequestBody NewMovieDto movieToBeUpdated) {
@@ -84,9 +124,21 @@ public class MoviesController {
         return ResponseEntity.ok(convertToMovieDto(updatedMovie));
     }
 
+    /**
+     * Преобразовать сущность фильма в DTO объект с полной информацией.
+     *
+     * @param movie Сущность фильма.
+     * @return DTO объект с полной информацией о фильме.
+     */
     private MovieDto convertToMovieDto(Movie movie) {
         return modelMapper.map(movie, MovieDto.class);
     }
+    /**
+     * Преобразовать сущность фильма в DTO объект с минимальной информацией.
+     *
+     * @param movie Сущность фильма.
+     * @return DTO объект с минимальной информацией о фильме.
+     */
     private MovieSimpleDto convertToMovieSimpleDto(Movie movie) {
         return modelMapper.map(movie, MovieSimpleDto.class);
     }

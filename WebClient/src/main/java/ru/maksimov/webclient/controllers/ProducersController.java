@@ -34,7 +34,7 @@ public class ProducersController {
     @GetMapping
     public String getProducersPage(Model model) {
         List<ProducerSimpleDto> producers = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/producers",
+                "http://MOVIESSERVICE/api/producers",
                 ProducerSimpleDto[].class
         )).toList();
 
@@ -46,7 +46,7 @@ public class ProducersController {
     @GetMapping("/{id}")
     public String getProducerInfo(@PathVariable("id") int id, Model model) {
         ProducerDto producer = restTemplate.getForObject(
-                "http://MOVIESSERVICE/producers/" + id,
+                "http://MOVIESSERVICE/api/producers/" + id,
                 ProducerDto.class);
 
         model.addAttribute("producer", producer);
@@ -57,7 +57,7 @@ public class ProducersController {
     @GetMapping("/{id}/edit")
     public String editPage(@PathVariable("id") int id, Model model) {
         ProducerDto producer = restTemplate.getForObject(
-                "http://MOVIESSERVICE/producers/" + id,
+                "http://MOVIESSERVICE/api/producers/" + id,
                 ProducerDto.class);
         model.addAttribute("producer", producer);
         return "producers/editPage";
@@ -71,7 +71,7 @@ public class ProducersController {
 
         HttpEntity<NewProducerDto> requestEntity = new HttpEntity<>(producerDto, headers);
 
-        restTemplate.patchForObject("http://MOVIESSERVICE/producers/" + id, requestEntity, Void.class);
+        restTemplate.patchForObject("http://MOVIESSERVICE/api/producers/" + id, requestEntity, Void.class);
         return "redirect:/producers/" + id;
     }
 
@@ -83,7 +83,7 @@ public class ProducersController {
     @PostMapping("/create")
     public String create(@ModelAttribute NewProducerDto newProducer) {
 
-        String createMovieUrl = "http://MOVIESSERVICE/producers";
+        String createMovieUrl = "http://MOVIESSERVICE/api/producers";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

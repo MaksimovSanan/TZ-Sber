@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Класс, представляющий модель продюсера фильма.
+ */
 @Entity
 @Table(name = "producers")
 @Data
@@ -20,9 +23,13 @@ public class Producer {
     private String name;
 
     @OneToMany(mappedBy = "producer")
-//    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Movie> movies;
 
+    /**
+     * Конструктор для создания продюсера фильма с указанным идентификатором.
+     *
+     * @param id Идентификатор продюсера фильма.
+     */
     public Producer(Integer id) {
         this.id = id;
     }

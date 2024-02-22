@@ -13,6 +13,9 @@ import ru.maksimov.MovieService.util.exceptions.ProducerNotFoundException;
 
 import java.util.List;
 
+/**
+ * Реализация сервиса для работы с продюсерами фильмов.
+ */
 @Service
 @Transactional(readOnly = true)
 public class ProducersServiceImpl implements ProducersService{
@@ -21,28 +24,58 @@ public class ProducersServiceImpl implements ProducersService{
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Конструктор класса ProducersServiceImpl.
+     *
+     * @param producersRepository Репозиторий продюсеров фильмов.
+     */
     @Autowired
     public ProducersServiceImpl(ProducersRepository producersRepository) {
         this.producersRepository = producersRepository;
     }
 
+    /**
+     * Получить все записи о продюсерах фильмов.
+     *
+     * @return Список всех продюсеров фильмов.
+     */
     @Override
     public List<Producer> findAll() {
         return producersRepository.findAll();
     }
 
+    /**
+     * Найти продюсера фильма по его идентификатору.
+     *
+     * @param id Идентификатор продюсера фильма.
+     * @return Найденный продюсер фильма.
+     * @throws ProducerNotFoundException если продюсер с указанным идентификатором не найден.
+     */
     @Override
     public Producer findById(Integer id) {
         return producersRepository.findById(id).orElseThrow(
                 () -> new ProducerNotFoundException("Producer with id " + id + " not found!"));
     }
 
+    /**
+     * Сохранить продюсера фильма.
+     *
+     * @param producer Продюсер фильма для сохранения.
+     */
     @Override
     @Transactional
     public void save(Producer producer) {
         producersRepository.save(producer);
     }
 
+    /**
+     * Обновить информацию о продюсере фильма.
+     *
+     * @param id             Идентификатор продюсера фильма для обновления.
+     * @param producerUpdated Обновленная информация о продюсере фильма.
+     * @return Обновленный продюсер фильма.
+     * @throws ProducerNotFoundException если продюсер фильма с указанным идентификатором не найден.
+     */
     @Override
     @Transactional
     public Producer update(int id, Producer producerUpdated) {
@@ -58,6 +91,11 @@ public class ProducersServiceImpl implements ProducersService{
         return entityManager.merge(existingProducer);
     }
 
+    /**
+     * Удалить продюсера фильма.
+     *
+     * @param producer Продюсер фильма для удаления.
+     */
     @Override
     @Transactional
     public void delete(Producer producer) {
