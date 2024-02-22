@@ -1,4 +1,3 @@
-<!-- editPage.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -27,7 +26,7 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container" th:if="${producer != null}">
     <h2 class="text-center mb-4">Edit Producer</h2>
     <div class="form-container">
         <form th:action="@{/producers/{id}(id=${producer.id})}" th:object="${producer}" th:method="patch">
@@ -39,6 +38,10 @@
             <a th:href="@{/producers/{id}(id=${producer.id})}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
+</div>
+<div class="container" th:if="${producer == null}">
+    <p>Продюсер не найден.</p>
+    <a href="javascript:history.back()" class="btn btn-secondary">Назад</a>
 </div>
 
 <!-- Bootstrap JavaScript -->

@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container" th:if="${actor != null}">
     <h2 class="text-center mb-4">Edit Actor</h2>
     <div class="form-container">
         <form th:action="@{/actors/{id}(id=${actor.id})}" th:object="${actor}" th:method="patch">
@@ -38,6 +38,10 @@
             <a th:href="@{/actors/{id}(id=${actor.id})}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
+</div>
+<div class="container" th:if="${actor == null}">
+    <p>Актер не найден.</p>
+    <a href="javascript:history.back()" class="btn btn-secondary">Назад</a>
 </div>
 
 <!-- Bootstrap JavaScript -->

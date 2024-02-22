@@ -16,6 +16,7 @@ import ru.maksimov.webclient.dto.moviesDto.NewMovieDto;
 import ru.maksimov.webclient.dto.producersDto.NewProducerDto;
 import ru.maksimov.webclient.dto.producersDto.ProducerDto;
 import ru.maksimov.webclient.dto.producersDto.ProducerSimpleDto;
+import ru.maksimov.webclient.services.ActorsService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,30 +24,25 @@ import java.util.List;
 @Controller
 @RequestMapping("/actors")
 public class ActorsController {
-    private final RestTemplate restTemplate;
+    private final ActorsService actorsService;
 
     @Autowired
-    public ActorsController(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public ActorsController(ActorsService actorsService) {
+        this.actorsService = actorsService;
     }
 
-    @GetMapping
-    public String getActorsPage(Model model) {
-        List<ActorSimpleDto> actors = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/actors",
-                ActorSimpleDto[].class
-        )).toList();
-
-        model.addAttribute("actors", actors);
-
-        return "actors/actorsPage";
-    }
+//    @GetMapping
+//    public String getActorsPage(Model model) {
+//        List<ActorSimpleDto> actors = actorsService.getActors();
+//
+//        model.addAttribute("actors", actors);
+//
+//        return "actors/actorsPage";
+//    }
 
     @GetMapping("/{id}")
     public String getActorInfo(@PathVariable("id") int id, Model model) {
-        ActorDto actor = restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/actors/" + id,
-                ActorDto.class);
+        ActorDto actor = actorsService.getActorInfo(id);
 
         model.addAttribute("actor", actor);
 
@@ -55,9 +51,7 @@ public class ActorsController {
 
     @GetMapping("/{id}/edit")
     public String editPage(@PathVariable("id") int id, Model model) {
-        ActorDto actor = restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/actors/" + id,
-                ActorDto.class);
+        ActorDto actor = actorsService.getActorInfo(id);
         model.addAttribute("actor", actor);
         return "actors/editPage";
     }
@@ -65,18 +59,13 @@ public class ActorsController {
     @PatchMapping("/{id}")
     public String updateActor(@PathVariable("id") int id,
                              @ModelAttribute NewActorDto actorDto) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<NewActorDto> requestEntity = new HttpEntity<>(actorDto, headers);
-
-        restTemplate.patchForObject("http://MOVIESSERVICE/api/actors/" + id, requestEntity, Void.class);
+        actorsService.updateActor(id, actorDto);
         return "redirect:/actors/" + id;
     }
 
     @DeleteMapping("/{id}")
     public String deleteProducer(@PathVariable("id") int id) {
-        restTemplate.delete("http://MOVIESSERVICE/api/actors/" + id);
+        actorsService.deleteActor(id);
         return "redirect:/";
     }
 
@@ -88,12 +77,7 @@ public class ActorsController {
     @PostMapping("/create")
     public String create(@ModelAttribute NewActorDto newActor) {
 
-        String createActorUrl = "http://MOVIESSERVICE/api/actors";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<NewActorDto> requestEntity = new HttpEntity<>(newActor, headers);
-        ResponseEntity<Void> responseEntity = restTemplate.postForEntity(createActorUrl, requestEntity, Void.class);
+        actorsService.createActor(newActor);
 
         return "redirect:/";
     }

@@ -16,6 +16,9 @@ import ru.maksimov.webclient.dto.moviesDto.NewMovieDto;
 import ru.maksimov.webclient.dto.producersDto.NewProducerDto;
 import ru.maksimov.webclient.dto.producersDto.ProducerDto;
 import ru.maksimov.webclient.dto.producersDto.ProducerSimpleDto;
+import ru.maksimov.webclient.services.ActorsService;
+import ru.maksimov.webclient.services.MoviesService;
+import ru.maksimov.webclient.services.ProducersService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,19 +26,20 @@ import java.util.List;
 @Controller
 @RequestMapping("/movies")
 public class MoviesController {
-    private final RestTemplate restTemplate;
+    private final MoviesService moviesService;
+    private final ActorsService actorsService;
+    private final ProducersService producersService;
 
     @Autowired
-    public MoviesController(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public MoviesController(MoviesService moviesService, ActorsService actorsService, ProducersService producersService) {
+        this.moviesService = moviesService;
+        this.actorsService = actorsService;
+        this.producersService = producersService;
     }
 
     @GetMapping
     public String getMoviesPage(Model model) {
-        List<MovieSimpleDto> movies = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/movies",
-                MovieSimpleDto[].class
-        )).toList();
+        List<MovieSimpleDto> movies = moviesService.getMovies();
 
         model.addAttribute("movies", movies);
 
@@ -44,9 +48,7 @@ public class MoviesController {
 
     @GetMapping("/{id}")
     public String getMovieInfo(@PathVariable("id") int id, Model model) {
-        MovieDto movie = restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/movies/" + id,
-                MovieDto.class);
+        MovieDto movie = moviesService.getMovieInfo(id);
 
         model.addAttribute("movie", movie);
 
@@ -56,16 +58,10 @@ public class MoviesController {
     @GetMapping("/new")
     public String newMoviePage(@ModelAttribute("newMovie") NewMovieDto newMovieDto, Model model) {
 
-        List<ProducerSimpleDto> producers = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/producers",
-                ProducerSimpleDto[].class
-        )).toList();
+        List<ProducerSimpleDto> producers = producersService.getProducers();
         model.addAttribute("producers", producers);
 
-        List<ActorSimpleDto> actors = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/actors",
-                ActorSimpleDto[].class
-        )).toList();
+        List<ActorSimpleDto> actors = actorsService.getActors();
         model.addAttribute("actors", actors);
 
         return "movies/newMoviePage";
@@ -74,33 +70,20 @@ public class MoviesController {
     @PostMapping("/create")
     public String create(@ModelAttribute NewMovieDto newMovie) {
 
-        String createMovieUrl = "http://MOVIESSERVICE/api/movies";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<NewMovieDto> requestEntity = new HttpEntity<>(newMovie, headers);
-        ResponseEntity<Void> responseEntity = restTemplate.postForEntity(createMovieUrl, requestEntity, Void.class);
+        moviesService.createMovie(newMovie);
 
         return "redirect:/";
     }
 
     @GetMapping("/{id}/edit")
     public String editPage(@PathVariable("id") int id, Model model) {
-        MovieDto movie = restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/movies/" + id,
-                MovieDto.class);
+        MovieDto movie = moviesService.getMovieInfo(id);
         model.addAttribute("movie", movie);
 
-        List<ProducerSimpleDto> producers = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/producers",
-                ProducerSimpleDto[].class
-        )).toList();
+        List<ProducerSimpleDto> producers = producersService.getProducers();
         model.addAttribute("producers", producers);
 
-        List<ActorSimpleDto> actors = Arrays.stream(restTemplate.getForObject(
-                "http://MOVIESSERVICE/api/actors",
-                ActorSimpleDto[].class
-        )).toList();
+        List<ActorSimpleDto> actors = actorsService.getActors();
         model.addAttribute("actors", actors);
 
         return "movies/editPage";
@@ -109,18 +92,13 @@ public class MoviesController {
     @PatchMapping("/{id}")
     public String updateMovie(@PathVariable("id") int id,
                                  @ModelAttribute NewMovieDto movieDto) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<NewMovieDto> requestEntity = new HttpEntity<>(movieDto, headers);
-
-        restTemplate.patchForObject("http://MOVIESSERVICE/api/movies/" + id, requestEntity, Void.class);
+        moviesService.updateMovie(id, movieDto);
         return "redirect:/movies/" + id;
     }
 
     @DeleteMapping("/{id}")
     public String deleteProducer(@PathVariable("id") int id) {
-        restTemplate.delete("http://MOVIESSERVICE/api/movies/" + id);
+        moviesService.deleteMovie(id);
         return "redirect:/";
     }
 }

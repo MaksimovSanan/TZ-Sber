@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container" th:if="${actor != null}">
     <div class="actor-details">
         <h2 th:text="${actor.name}"></h2>
         <h3>Movies</h3>
@@ -44,6 +44,10 @@
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-danger">Delete</button>
     </form>
+</div>
+<div class="container" th:if="${actor == null}">
+    <p>Актер не найден.</p>
+    <a href="javascript:history.back()" class="btn btn-secondary">Назад</a>
 </div>
 
 <!-- Bootstrap JavaScript -->

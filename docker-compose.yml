@@ -26,8 +26,8 @@ services:
         context: .
         dockerfile: docker/services/Dockerfile.MoviesService
       container_name: movies_service_container
-#      ports:
-#        - "8096:8096"
+      ports:
+        - "8085:8085"
       links:
         - eureka-server
       networks:

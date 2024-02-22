@@ -11,7 +11,3 @@ cd ..
 cd WebClient
 ./mvnw clean package
 cd ..
-
-#cd APIGateway
-#./mvnw clean package
-#cd ..
