@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Actor</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}"/>
+    <!-- Custom CSS -->
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+        }
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container" th:if="${actor != null}">
+    <h2 class="text-center mb-4">Edit Actor</h2>
+    <div class="form-container">
+        <form th:action="@{/actors/{id}(id=${actor.id})}" th:object="${actor}" th:method="patch">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a th:href="@{/actors/{id}(id=${actor.id})}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+<div class="container" th:if="${actor == null}">
+    <p>Актер не найден.</p>
+    <a href="javascript:history.back()" class="btn btn-secondary">Назад</a>
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

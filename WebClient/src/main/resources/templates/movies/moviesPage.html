@@ -1,0 +1,63 @@
+<!-- moviesPage.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}"/>
+    <style>
+        .movie-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .movie-item:hover {
+            background-color: #f5f5f5;
+        }
+        .movie-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Movies</h1>
+    <div th:each="movie : ${movies}" class="movie-item" th:attr="data-url=@{/movies/{id}(id=${movie.id})}">
+        <h2 th:text="${movie.title}"></h2>
+        <p th:text="${movie.description}" class="movie-description"></p>
+    </div>
+
+    <!-- Кнопки для создания новых сущностей -->
+    <div class="row mt-4">
+        <div class="col">
+            <a th:href="@{/movies/new}" class="btn btn-success">New Movie</a>
+        </div>
+        <div class="col">
+            <a th:href="@{/actors/new}" class="btn btn-success">New Actor</a>
+        </div>
+        <div class="col">
+            <a th:href="@{/producers/new}" class="btn btn-success">New Producer</a>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const movieItems = document.querySelectorAll('.movie-item');
+        movieItems.forEach(function (movieItem) {
+            movieItem.addEventListener('click', function () {
+                const url = movieItem.dataset.url;
+                window.location.href = url;
+            });
+        });
+    });
+</script>
+</body>
+</html>

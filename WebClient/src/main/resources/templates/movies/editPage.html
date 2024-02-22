@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Movie</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container" th:if="${movie != null}">
+    <h1>Edit Movie</h1>
+    <form th:action="@{/movies/{id}(id=${movie.id})}" th:method="patch">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" th:value="${movie.title}" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" th:text="${movie.description}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="yearOfProduction" class="form-label">Year of Production</label>
+            <input type="number" class="form-control" id="yearOfProduction" name="yearOfProduction" th:value="${movie.yearOfProduction}">
+        </div>
+        <!-- Выпадающий список для выбора продюсера -->
+        <div class="mb-3">
+            <label for="producerId" class="form-label">Producer</label>
+            <select class="form-select" id="producerId" name="producerId">
+                <option value="">Select Producer</option>
+                <option th:each="producer : ${producers}" th:value="${producer.id}" th:text="${producer.name}"
+                        th:selected="${producer.id == (movie.producer != null ? movie.producer.id : null)}"></option>
+            </select>
+        </div>
+        <!-- Чекбоксы для выбора актеров -->
+        <div class="mb-3">
+            <label class="form-label">Actors</label>
+            <div th:each="actor : ${actors}">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" th:id="'actor' + ${actor.id}" th:name="'actorsId'" th:value="${actor.id}" th:checked="${movie.actors.contains(actor)}">
+                    <label class="form-check-label" th:for="'actor' + ${actor.id}" th:text="${actor.name}"></label>
+                </div>
+            </div>
+        </div>
+        <!-- Прямая ссылка на редактирование продюсера и актеров может быть добавлена здесь по вашему усмотрению -->
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+    <a th:href="@{/movies/{id}(id=${movie.id})}" class="btn btn-secondary">Cancel</a>
+</div>
+<div class="container" th:if="${movie == null}">
+    <p>Фильм не найден.</p>
+    <a href="javascript:history.back()" class="btn btn-secondary">Назад</a>
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
