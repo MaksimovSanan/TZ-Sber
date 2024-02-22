@@ -1,0 +1,48 @@
+<!-- producerInfoPage.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Producer Info Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}"/>
+    <style>
+        .producer-details {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .producer-details h2 {
+            margin-bottom: 10px;
+        }
+        .producer-details p {
+            font-size: 16px;
+            color: #666;
+        }
+        .movies-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="producer-details">
+        <h2 th:text="${producer.name}"></h2>
+        <h3>Movies Produced</h3>
+        <ul class="movies-list">
+            <li th:each="movie : ${producer.movies}">
+                <a th:href="@{/movies/{id}(id=${movie.id})}" th:text="${movie.title}"></a>
+            </li>
+        </ul>
+    </div>
+    <a href="javascript:history.back()" class="btn btn-secondary">Назад</a>
+    <a th:href="@{/}" class="btn btn-primary">На главную</a>
+    <a th:href="@{/producers/{id}/edit(id=${producer.id})}" class="btn btn-warning">Edit</a>
+
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

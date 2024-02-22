@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Info Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}"/>
+    <style>
+        .movie-details {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .movie-details h2 {
+            margin-bottom: 10px;
+        }
+        .movie-details p {
+            font-size: 16px;
+            color: #666;
+        }
+        .actors-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="movie-details">
+        <h2 th:text="${movie.title}"></h2>
+        <p th:text="${movie.description}"></p>
+        <p><strong>Year of Production:</strong> <span th:text="${movie.yearOfProduction}"></span></p>
+        <h3>Producer</h3>
+        <p th:if="${movie.producer != null}">
+            <strong>Name:</strong> <a th:href="@{/producers/{id}(id=${movie.producer.id})}" th:text="${movie.producer.name}"></a>
+        </p>
+        <p th:unless="${movie.producer != null}">Producer information not available.</p>
+        <h3>Actors</h3>
+        <ul class="actors-list">
+            <li th:each="actor : ${movie.actors}">
+                <a th:href="@{/actors/{id}(id=${actor.id})}" th:text="${actor.name}"></a>
+            </li>
+        </ul>
+    </div>
+    <a th:href="@{/}" class="btn btn-primary">На главную</a>
+    <a th:href="@{/movies/{id}/edit(id=${movie.id})}" class="btn btn-warning">Edit</a>
+    <!-- Форма для отправки DELETE запроса -->
+    <form id="deleteMovieForm" th:action="@{|/movies/${movie.id}|}" method="post" style="display: inline;">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+
+<!-- Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

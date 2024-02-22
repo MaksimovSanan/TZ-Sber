@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.maksimov.MovieService.dto.actorsDto.ActorDto;
+import ru.maksimov.MovieService.dto.actorsDto.ActorSimpleDto;
 import ru.maksimov.MovieService.dto.actorsDto.NewActorDto;
 import ru.maksimov.MovieService.dto.producersDto.NewProducerDto;
 import ru.maksimov.MovieService.dto.producersDto.ProducerDto;
@@ -33,9 +34,9 @@ public class ActorsController {
 
 
     @GetMapping
-    public ResponseEntity<List<ActorDto>> findAll() {
+    public ResponseEntity<List<ActorSimpleDto>> findAll() {
         List<Actor> actors = actorsService.findAll();
-        return ResponseEntity.ok(actors.stream().map(this::convertToActorDto).collect(Collectors.toList()));
+        return ResponseEntity.ok(actors.stream().map(this::convertToActorSimpleDto).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
@@ -91,5 +92,7 @@ public class ActorsController {
     private ActorDto convertToActorDto(Actor actor) {
         return modelMapper.map(actor, ActorDto.class);
     }
-
+    private ActorSimpleDto convertToActorSimpleDto(Actor actor) {
+        return modelMapper.map(actor, ActorSimpleDto.class);
+    }
 }

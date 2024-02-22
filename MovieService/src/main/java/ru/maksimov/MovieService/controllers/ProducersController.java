@@ -11,6 +11,7 @@ import ru.maksimov.MovieService.dto.moviesDto.MovieDto;
 import ru.maksimov.MovieService.dto.moviesDto.NewMovieDto;
 import ru.maksimov.MovieService.dto.producersDto.NewProducerDto;
 import ru.maksimov.MovieService.dto.producersDto.ProducerDto;
+import ru.maksimov.MovieService.dto.producersDto.ProducerSimpleDto;
 import ru.maksimov.MovieService.models.Movie;
 import ru.maksimov.MovieService.models.Producer;
 import ru.maksimov.MovieService.services.ProducersService;
@@ -32,9 +33,9 @@ public class ProducersController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProducerDto>> findAll() {
+    public ResponseEntity<List<ProducerSimpleDto>> findAll() {
         List<Producer> producers = producersService.findAll();
-        return ResponseEntity.ok(producers.stream().map(this::convertToProducerDto).collect(Collectors.toList()));
+        return ResponseEntity.ok(producers.stream().map(this::convertToProducerSimpleDto).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
@@ -89,5 +90,8 @@ public class ProducersController {
 
     private ProducerDto convertToProducerDto(Producer producer) {
         return modelMapper.map(producer, ProducerDto.class);
+    }
+    private ProducerSimpleDto convertToProducerSimpleDto(Producer producer) {
+        return modelMapper.map(producer, ProducerSimpleDto.class);
     }
 }
